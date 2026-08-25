@@ -1,399 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fondary Privacy Policy</title>
-  <meta name="description" content="Privacy policy for Fondary, a private voice-first memory capture app made by Ashraya Studio." />
-  <meta property="og:title" content="Fondary Privacy Policy" />
-  <meta property="og:description" content="What data Fondary collects, where it is stored, and who can access it." />
-  <meta property="og:url" content="https://getfondary.com/privacy" />
-  <link rel="canonical" href="https://getfondary.com/privacy" />
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fondary — Product information is being updated</title>
+  <meta name="description" content="Product information for Fondary is being updated.">
+  <meta name="theme-color" content="#f0ebe1">
+  <link rel="canonical" href="https://getfondary.com/privacy">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@400;500;600&display=swap');
-
     :root {
-      --teal:      #3D7A72;
-      --teal-dk:   #2C5A54;
-      --linen:     #F0EBE1;
-      --linen-dk:  #E4DDD0;
-      --gold:      #C4953A;
-      --mauve:     #B8929E;
-      --rose:      #C07B6A;
-      --lavender:  #9B96C4;
-      --blue:      #5E8FA3;
-      --mint:      #D8E8E2;
-      --text:      #0A1612;
-      --text-md:   #3A4A42;
-      --white:     #FDFAF6;
-      --font-display: 'Cormorant Garamond', serif;
-      --font-body:    'DM Sans', sans-serif;
+      color-scheme: light;
+      --linen: #f0ebe1;
+      --ink: #0a1612;
+      --teal: #2c5a54;
+      --line: #d8cec0;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html, body { min-height: 100%; }
 
     body {
+      margin: 0;
       background: var(--linen);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 15px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
+      color: var(--ink);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; }
-
-    .page-shell { min-height: 100vh; overflow: hidden; }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 20px 40px;
-      background: var(--linen);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid var(--linen-dk);
-    }
-
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--teal-dk);
-      text-decoration: none;
-      letter-spacing: 0.01em;
-      white-space: nowrap;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text-md);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a:focus-visible { color: var(--teal); }
-
-    .nav-cta {
-      display: inline-block;
-      background: var(--teal);
-      color: var(--linen);
-      font-family: var(--font-body);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      padding: 11px 22px;
-      border-radius: 8px;
-      border: none;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-
-    .nav-cta:hover,
-    .nav-cta:focus-visible { background: var(--teal-dk); }
-
-    .hero-wrap { position: relative; }
-
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.55;
-      pointer-events: none;
-    }
-
-    .blob.hero-one {
-      width: 140px;
-      height: 140px;
-      background: var(--mint);
-      top: 62px;
-      right: 8%;
-    }
-
-    .blob.hero-two {
-      width: 100px;
-      height: 100px;
-      background: var(--linen-dk);
-      left: 7%;
-      bottom: 54px;
-    }
-
-    .hero {
-      position: relative;
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 88px 40px 48px;
-    }
-
-    .eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 14px;
-    }
-
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(34px, 6vw, 42px);
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.04;
-      letter-spacing: -0.02em;
-      margin-bottom: 18px;
-      text-wrap: balance;
-    }
-
-    .hero-tagline {
-      font-family: var(--font-display);
-      font-size: clamp(24px, 3.4vw, 32px);
-      font-weight: 400;
-      font-style: italic;
-      color: var(--teal-dk);
-      line-height: 1.25;
-      max-width: 720px;
-    }
-
-    .policy-wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 40px 88px;
-    }
-
-    .policy-card {
-      background: var(--white);
-      border: 1px solid var(--linen-dk);
-      border-radius: 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      padding: clamp(28px, 5vw, 52px);
-    }
-
-    .policy-card section + section { margin-top: 36px; }
-
-    .policy-card h2 {
-      font-family: var(--font-body);
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .policy-card p {
-      color: var(--text-md);
-      margin-top: 12px;
-      max-width: 760px;
-    }
-
-    .policy-card strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .policy-card ul {
+    main {
+      min-height: 100vh;
       display: grid;
-      gap: 12px;
-      margin-top: 14px;
-      padding-left: 22px;
-      color: var(--text-md);
+      place-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      text-align: center;
     }
 
-    .policy-card li::marker { color: var(--teal); }
-
-    .contact-link {
-      color: var(--teal-dk);
+    .product {
+      margin: 0;
+      color: var(--teal);
+      font-family: ui-serif, Georgia, serif;
+      font-size: clamp(2rem, 8vw, 4rem);
       font-weight: 600;
-      text-decoration-color: var(--mint);
-      text-decoration-thickness: 2px;
-      text-underline-offset: 3px;
+      letter-spacing: -0.02em;
     }
 
-    footer {
-      background: var(--teal-dk);
-      color: var(--linen);
-      padding: 48px 40px;
-    }
-
-    .footer-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-logo {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .footer-tagline {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-style: italic;
-      color: var(--mint);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--linen);
-      opacity: 0.84;
-    }
-
-    .footer-links a:hover,
-    .footer-links a:focus-visible { opacity: 1; }
-
-    .footer-copy {
-      width: 100%;
-      font-size: 12px;
-      color: var(--linen-dk);
-      opacity: 0.82;
-    }
-
-    @media (max-width: 760px) {
-      nav { padding: 18px 24px; align-items: flex-start; }
-      .nav-links { display: none; }
-      .hero { padding: 72px 24px 42px; }
-      .policy-wrap { padding: 0 24px 72px; }
-      .policy-card { padding: 26px 22px; }
-      footer { padding: 42px 24px; }
-      .footer-inner { align-items: flex-start; flex-direction: column; }
+    h1 {
+      max-width: 32rem;
+      margin: 0;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      font-weight: 500;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <nav aria-label="Primary navigation">
-      <a class="nav-logo" href="/">Fondary</a>
-      <ul class="nav-links">
-        <li><a href="/#data">Data</a></li>
-        <li><a href="/#security">Security</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <a class="nav-cta" href="mailto:getfondary@gmail.com">Contact</a>
-    </nav>
-
-    <main>
-      <div class="hero-wrap">
-        <div class="blob hero-one" aria-hidden="true"></div>
-        <div class="blob hero-two" aria-hidden="true"></div>
-        <section class="hero" aria-labelledby="hero-title">
-          <p class="eyebrow">Fondary · Privacy Policy</p>
-          <h1 id="hero-title">Fondary Privacy Policy (2026-07-28)</h1>
-          <p class="hero-tagline">What data Fondary collects, where it is stored, and who can access it.</p>
-        </section>
-      </div>
-
-      <div class="policy-wrap">
-        <article class="policy-card" aria-label="Fondary Privacy Policy">
-          <section aria-labelledby="what-fondary-is">
-            <h2 id="what-fondary-is">What Fondary is</h2>
-            <p>Fondary is a private, voice-first memory capture app made by Ashraya Studio. This policy covers what data Fondary collects, where it's stored, and who can access it.</p>
-          </section>
-
-          <section id="data" aria-labelledby="data-fondary-collects">
-            <h2 id="data-fondary-collects">Data Fondary collects</h2>
-            <p><strong>Memory content you create.</strong> Titles, details, categories, and any people/place tags you add when you capture a memory — by voice or by typing.</p>
-            <p><strong>Voice input.</strong> Fondary uses Apple's Speech framework to convert your spoken words into text when you capture a memory by voice. Fondary does not save or cache the raw audio recording — audio is streamed directly to Apple's transcription system as you speak, and only the resulting text is saved as your memory. When your device supports on-device transcription, Fondary requires it; otherwise, transcription may be processed by Apple's speech recognition service rather than entirely on your device.</p>
-            <p><strong>Location: not currently collected.</strong> Fondary does not access your device's location in any way.</p>
-            <p><strong>Account/purchase information.</strong> If you subscribe to a paid tier, purchases are processed entirely by Apple through StoreKit 2 — Fondary never sees or stores your payment details.</p>
-            <p><strong>Email address, only if you invite family.</strong> If you share a memory with a family member, Fondary uses your device's own Mail app to send the invite, which means providing their email address to address that message. This happens through your device's mail composer, not a server Fondary controls or stores addresses on.</p>
-          </section>
-
-          <section aria-labelledby="where-your-data-lives">
-            <h2 id="where-your-data-lives">Where your data lives</h2>
-            <p><strong>On your device by default.</strong> Memory content is stored locally using Apple's SwiftData framework, protected at the file level so it's inaccessible while your device is locked.</p>
-            <p><strong>iCloud sync, only if you turn it on.</strong> Fondary does not sync to iCloud automatically. If you enable sync, your memories are backed up to your personal iCloud account via Apple's CloudKit, in your own private database — Ashraya Studio does not have access to it.</p>
-            <p><strong>Family Sharing, only for memories you explicitly share.</strong> If you share a memory with a family member, that specific memory (not your whole library) is shared via Apple's CloudKit sharing, directly between your iCloud account and theirs — capped at 5 people, and you can remove someone's access at any time.</p>
-          </section>
-
-          <section aria-labelledby="what-fondary-does-not-do">
-            <h2 id="what-fondary-does-not-do">What Fondary does not do</h2>
-            <ul>
-              <li><strong>No third-party analytics or advertising SDKs.</strong> Fondary has zero third-party dependencies of any kind. There is nothing in the app capable of sending your data to an outside company.</li>
-              <li><strong>No photo library access.</strong> Fondary does not request or use access to your Photos library.</li>
-              <li><strong>No account required to start.</strong> You can use Fondary without creating an account or signing in with anything beyond your own device.</li>
-            </ul>
-          </section>
-
-          <section id="security" aria-labelledby="security-title">
-            <h2 id="security-title">Security</h2>
-            <ul>
-              <li>Fondary supports an optional app lock using Face ID, Touch ID, or your device passcode. This authentication happens entirely through Apple's system frameworks — Fondary never has access to your biometric data itself, only a yes/no confirmation that you authenticated.</li>
-              <li>When Fondary is running in the background, a privacy screen covers your content in the App Switcher preview.</li>
-            </ul>
-          </section>
-
-          <section aria-labelledby="data-deletion">
-            <h2 id="data-deletion">Data deletion</h2>
-            <p>Deleting a memory removes it from your device and, if it was previously synced, from iCloud as well — including if you had temporarily turned sync off before deleting.</p>
-          </section>
-
-          <section aria-labelledby="changes-to-this-policy">
-            <h2 id="changes-to-this-policy">Changes to this policy</h2>
-            <p>If this policy changes, the date at the top will be updated.</p>
-          </section>
-
-          <section id="contact" aria-labelledby="contact-title">
-            <h2 id="contact-title">Contact</h2>
-            <p>Questions about this policy: <a class="contact-link" href="mailto:getfondary@gmail.com">getfondary@gmail.com</a></p>
-          </section>
-        </article>
-      </div>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <a class="footer-logo" href="/">Fondary</a>
-        <p class="footer-tagline">Your life, remembered.</p>
-        <ul class="footer-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/privacy">Privacy</a></li>
-          <li><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms</a></li>
-          <li><a href="mailto:getfondary@gmail.com">Contact</a></li>
-        </ul>
-        <p class="footer-copy">© 2026 Ashraya Studio. Fondary Privacy Policy.</p>
-      </div>
-    </footer>
-  </div>
+  <main aria-labelledby="status">
+    <p class="product">Fondary</p>
+    <h1 id="status">Product information is being updated.</h1>
+  </main>
 </body>
 </html>
