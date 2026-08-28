@@ -196,13 +196,21 @@ def main() -> int:
         agent_text = agents.read_text(encoding="utf-8")
         for marker in (
             "https://github.com/ashrayastudio/getfondary.git",
-            "/Users/hermes/.local/bin/hermes -z",
-            "exclusive operator",
+            "`gh` CLI",
+            "macOS-keyring-backed credential helper",
+            "Hermes is a bounded backup",
+            "A sandbox denial requires narrow escalation",
             "D-016",
             "D-027",
         ):
             if marker not in agent_text:
                 errors.append(f"AGENTS.md missing governance marker {marker}")
+        for obsolete in (
+            "/Users/hermes/.local/bin/hermes -z",
+            "exclusive operator",
+        ):
+            if obsolete in agent_text:
+                errors.append(f"AGENTS.md contains obsolete governance marker {obsolete}")
 
     if errors:
         print("Fondary neutral-site validation failed:", file=sys.stderr)
