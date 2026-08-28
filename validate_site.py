@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 import sys
+import tempfile
 
 
 ROOT = Path(__file__).resolve().parent
@@ -41,6 +42,15 @@ FORBIDDEN_CLAIM_MARKERS = (
     "tracking",
     "$",
 )
+
+
+def repository_html_paths(root: Path = ROOT) -> list[Path]:
+    """Return every repository HTML source while excluding Git internals."""
+    return sorted(
+        path.relative_to(root)
+        for path in root.rglob("*.html")
+        if ".git" not in path.relative_to(root).parts
+    )
 
 
 class NeutralPageParser(HTMLParser):
@@ -171,12 +181,23 @@ def run_self_test() -> int:
         if not validate_source(mutation, PAGES[Path("index.html")]):
             print(f"self-test mutation {number} was not rejected", file=sys.stderr)
             return 1
+    with tempfile.TemporaryDirectory(prefix="fondary-site-validator.") as temporary:
+        root = Path(temporary)
+        future = root / "future" / "nested.html"
+        future.parent.mkdir(parents=True)
+        future.write_text("<p>Future</p>", encoding="utf-8")
+        if repository_html_paths(root) != [Path("future/nested.html")]:
+            print("self-test did not discover a nested future HTML page", file=sys.stderr)
+            return 1
     print("Fondary neutral-site validator self-test passed.")
     return 0
 
 
 def main() -> int:
     errors: list[str] = []
+    for relative_path in repository_html_paths():
+        if relative_path not in PAGES:
+            errors.append(f"unregistered HTML page {relative_path}")
     for relative_path, canonical in PAGES.items():
         path = ROOT / relative_path
         if not path.is_file():
