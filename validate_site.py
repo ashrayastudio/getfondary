@@ -20,7 +20,8 @@ ALLOWED_VISIBLE_TEXT = (
     "Product information is being updated.",
 )
 FORBIDDEN_SOURCE_MARKERS = (
-    "ashraya studio",
+    "ashraya",
+    "ashrayastudio",
     "kalpesh patel",
     "mailto:",
     "copyright",
@@ -170,7 +171,7 @@ def validate_source(source: str, canonical: str) -> list[str]:
 def run_self_test() -> int:
     source = (ROOT / "index.html").read_text(encoding="utf-8")
     mutations = (
-        source.replace("Fondary</p>", "Ashraya Studio</p>"),
+        source.replace("Fondary</p>", "Ashraya</p>"),
         source.replace("</main>", "<p>Download on the App Store</p></main>"),
         source.replace("</main>", "<form></form></main>"),
         source.replace("</main>", "<script></script></main>"),

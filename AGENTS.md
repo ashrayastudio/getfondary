@@ -17,9 +17,10 @@ Missing, stale, conflicting, or `UNKNOWN` evidence keeps the action `BLOCKED`.
 - Ashraya Studio is not approved as provider, operator, seller, or owner.
 - The founder's legal name is omitted by default and may appear only when a
   current exact-surface requirement and founder decision support it.
-- The `ashrayastudio` GitHub owner, repository URL, contact-domain leads, and
-  other established identifiers are technical/contact infrastructure, not
-  public legal-operator evidence.
+- The `ashrayastudio` GitHub owner and repository URL are internal technical
+  infrastructure. Neither those values nor an Ashraya-branded domain may
+  appear in rendered website content, HTML attributes, or customer contact
+  links. Any later public email must use the exact Fondary product domain.
 - Until exact product/privacy/commerce/publication gates pass, the authorized
   local package is neutral: only the Fondary product name and the statement
   that product information is being updated. No feature, price, availability,
