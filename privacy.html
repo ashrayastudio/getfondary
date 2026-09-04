@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fondary — Product information is being updated</title>
-  <meta name="description" content="Product information for Fondary is being updated.">
+  <title>Fondary — Website and support privacy</title>
+  <meta name="description" content="How the Fondary website and support email handle information.">
   <meta name="theme-color" content="#f0ebe1">
   <link rel="canonical" href="https://getfondary.com/privacy">
   <style>
@@ -29,11 +29,10 @@
 
     main {
       min-height: 100vh;
-      display: grid;
-      place-content: center;
-      gap: 1rem;
-      padding: 2rem;
-      text-align: center;
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 5vw, 3rem);
+      line-height: 1.65;
     }
 
     .product {
@@ -45,21 +44,48 @@
       letter-spacing: -0.02em;
     }
 
+    a { display: inline-block; max-width: 100%; min-height: 44px; padding: 0.5rem 0; color: var(--teal); overflow-wrap: anywhere; }
+    a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+    h2 { margin-top: 2rem; font-size: 1.2rem; line-height: 1.4; }
+
     h1 {
-      max-width: 32rem;
-      margin: 0;
+      margin: 1rem 0;
       border-top: 1px solid var(--line);
       padding-top: 1rem;
-      font-size: clamp(1rem, 3vw, 1.25rem);
+      font-size: clamp(1.5rem, 5vw, 2rem);
       font-weight: 500;
       line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <main aria-labelledby="status">
+  <main aria-labelledby="privacy-title">
     <p class="product">Fondary</p>
-    <h1 id="status">Product information is being updated.</h1>
+    <h1 id="privacy-title">Website and support privacy</h1>
+    <p>Updated September 3, 2026.</p>
+    <p>This notice covers this website and voluntary support email. App privacy information is being updated; this is not the full app privacy policy.</p>
+
+    <h2>Controller and contact</h2>
+    <p>The data controller is Kalpesh Patel.</p>
+    <p>Fondary support: <a href="mailto:appportfolio.contact@gmail.com?subject=Fondary%20support">appportfolio.contact@gmail.com</a></p>
+
+    <h2>Information you choose to send</h2>
+    <p>If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.</p>
+    <p>Please do not send private memories, health details, voice recordings, or exports.</p>
+    <p>Support correspondence is handled by your email provider and Gmail, outside this website. Their own privacy policies also apply.</p>
+    <p><a href="https://policies.google.com/privacy">Google privacy policy</a></p>
+
+    <h2>Website hosting</h2>
+    <p>This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site's code adds no contact forms, analytics, advertising, or cookies.</p>
+    <p><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></p>
+
+    <h2>Support retention</h2>
+    <p>We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Gmail are subject to their own policies.</p>
+
+    <h2>Privacy questions and requests</h2>
+    <p>Use the contact above for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.</p>
+    <p>Changes to this notice will appear on this page with an updated date.</p>
+    <p><a href="/">Back to Fondary support</a></p>
   </main>
 </body>
 </html>

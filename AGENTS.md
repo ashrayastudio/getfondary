@@ -20,12 +20,23 @@ Missing, stale, conflicting, or `UNKNOWN` evidence keeps the action `BLOCKED`.
 - The `ashrayastudio` GitHub owner and repository URL are internal technical
   infrastructure. Neither those values nor an Ashraya-branded domain may
   appear in rendered website content, HTML attributes, or customer contact
-  links. Any later public email must use the exact Fondary product domain.
-- Until exact product/privacy/commerce/publication gates pass, the authorized
-  local package is neutral: only the Fondary product name and the statement
-  that product information is being updated. No feature, price, availability,
-  App Store, privacy-behavior, operator, collection, contact, or commerce claim
-  may be added by assumption.
+  links. The founder-approved public support email is exactly
+  `appportfolio.contact@gmail.com`; no other Gmail address or alias is allowed.
+- On September 3, 2026 the founder approved a limited website/support privacy
+  notice in place of holding-only content, confirmed the shared inbox sends
+  and receives, and committed to monitoring it and deleting resolved support
+  conversations within 90 days unless legally required longer. These are
+  founder-reported operational commitments, not independently observed tests.
+- `index.html` remains product/update/support only. `privacy.html` covers only
+  website hosting and voluntary support correspondence, not the unreleased
+  app's data behavior. It may contain the previously approved exact controller
+  sentence once: `The data controller is Kalpesh Patel.` No other surface,
+  attribute, heading, footer, or marketing copy may contain the legal name.
+- Preserve the existing GitHub Pages source, CNAME, routes and theme. No
+  feature, price, availability, App Store, app privacy, commerce, response-time,
+  legal-compliance or data-transfer claim may be added by assumption. The
+  app's full privacy policy, release metadata and Apple/DSA remain separate
+  gates. Do not publish this narrow notice as a full app policy.
 
 The central governing source is
 `/Users/hermes/Developer/personal-digital-products-ops`, especially D-016,
