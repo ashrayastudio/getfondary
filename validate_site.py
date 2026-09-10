@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed validation for the approved Fondary website/support notice."""
+"""Fail-closed validation for the approved Fondary website and privacy policy."""
 
 from __future__ import annotations
 
@@ -28,30 +28,52 @@ HOME_TEXT = (
     "appportfolio.contact@gmail.com",
     SUPPORT_WARNING,
     "The email link opens your email app. Nothing is sent or attached automatically.",
-    "Website and support privacy",
+    "Privacy policy",
 )
 PRIVACY_TEXT = (
     "Fondary",
-    "Website and support privacy",
-    "Updated September 3, 2026.",
-    "This notice covers this website and voluntary support email. App privacy information is being updated; this is not the full app privacy policy.",
-    "Controller and contact",
-    CONTROLLER_SENTENCE,
+    "Privacy Policy",
+    "Effective September 10, 2026.",
+    "Short version",
+    "Fondary is designed to keep your memories under your control. Memories are stored locally by default. Fondary does not sell memory content, use it for advertising, or operate a server that receives memory content for syncing or AI training.",
+    "Fondary does not require a separate app account. Optional personal iCloud sync uses your Apple account.",
+    "If you enable personal iCloud sync, Apple stores and synchronizes your memories through your private CloudKit database. Personal sync is off by default. Family collaboration and urgent family alerts are not included in this release.",
+    "Information you add",
+    "You may enter memory titles, descriptions, dates, categories, tags, and names of people. This content can be sensitive. Fondary stores it in the app's file-protected local repository until you delete it.",
+    "Voice capture",
+    "Voice audio is used transiently for speech recognition and is not saved as an audio recording. Fondary requires Apple's on-device speech recognition support and otherwise asks you to type. A saved transcript becomes memory content.",
+    "Optional personal iCloud sync",
+    "Personal iCloud sync is available at every Fondary tier. If you enable it, Fondary sends memory records to your private CloudKit database under your Apple account. Fondary does not operate the sync server.",
+    "Deleting a synchronized memory creates a content-free deletion record so an older device cannot restore the deleted memory. That record contains only the memory's random identifier and deletion date, not its title, description, people, categories, tags, or search data. A deletion made while sync is off is kept locally and synchronized if you later turn sync on.",
+    "Turning sync off stops CloudKit work. It does not delete records already in your iCloud database. Apple controls iCloud account processing and infrastructure under Apple's own terms and privacy policy.",
+    "Apple Watch capture",
+    "The Fondary Watch app is capture-only. Before the iPhone confirms a save, the Watch may retain the newly dictated text with a random identifier, timestamp, and delivery state in a file-protected outbox. It transfers that pending capture to the paired iPhone using Apple's WatchConnectivity service.",
+    "After a saved or rejected acknowledgement, the Watch deletes the pending entry. Fondary does not copy your memory archive, search index, or saved memory bodies to the Watch.",
+    "Purchases and Apple services",
+    "Apple processes App Store purchases, subscription state, and restores. Fondary keeps a limited local entitlement cache so temporary StoreKit unavailability does not incorrectly remove paid access.",
+    "Fondary also uses Apple system services for optional biometric lock, Siri and App Intents, local notifications, speech synthesis, and user-selected sharing destinations.",
+    "Sharing and exports",
+    "You can create PDF or JSON exports or open Apple's share sheet. Plain-text sharing first shows the exact payload, includes only the title by default, and lets you explicitly add memory details or the date. Fondary sends an export only to the destination you select.",
+    "Exports may contain private memory content. Review the destination and preview before sharing. Family collaboration, participant invitations, shared CloudKit databases, and urgent recipient notifications are not part of this release.",
+    "Analytics, advertising, and tracking",
+    "Fondary includes no third-party analytics SDK, advertising SDK, or cross-app tracking SDK. Product and crash-quality decisions may use aggregated reports provided through Apple's App Store Connect and Xcode tools. Memory, voice, search, person, and support content is not added to product analytics.",
+    "Support communications",
     "Fondary support:",
     "appportfolio.contact@gmail.com",
-    "Information you choose to send",
     "If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.",
     SUPPORT_WARNING,
-    "Support correspondence is handled by your email provider and Gmail, outside this website. Their own privacy policies also apply.",
+    "Support correspondence is handled by your email provider and Gmail. Their own privacy policies also apply.",
     "Google privacy policy",
+    "We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Gmail are subject to their own policies.",
     "Website hosting",
     "This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site's code adds no contact forms, analytics, advertising, or cookies.",
     "GitHub privacy statement",
-    "Support retention",
-    "We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Gmail are subject to their own policies.",
-    "Privacy questions and requests",
-    "Use the contact above for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.",
-    "Changes to this notice will appear on this page with an updated date.",
+    "Your choices and deletion",
+    "You can keep iCloud sync off, turn it on or off in Settings, export selected content, delete an individual memory, or delete all memories. When personal sync is enabled now or later, Fondary uses content-free deletion records to prevent an older device from restoring deleted memories.",
+    "Privacy questions and policy changes",
+    "Use the support contact above for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.",
+    CONTROLLER_SENTENCE,
+    "Changes to this policy will appear on this page with an updated effective date.",
     "Back to Fondary support",
 )
 APPROVED_SUPPORT_LINK = "mailto:appportfolio.contact@gmail.com?subject=Fondary%20support"
@@ -168,8 +190,8 @@ def validate_source(source: str, canonical: str) -> list[str]:
 
     privacy = canonical == PAGES[Path("privacy.html")]
     expected_text = PRIVACY_TEXT if privacy else HOME_TEXT
-    expected_title = "Fondary — Website and support privacy" if privacy else "Fondary — Product information is being updated"
-    expected_description = "How the Fondary website and support email handle information." if privacy else "Product information for Fondary is being updated."
+    expected_title = "Fondary Privacy Policy" if privacy else "Fondary — Product information is being updated"
+    expected_description = "How Fondary handles app, website, and support information." if privacy else "Product information for Fondary is being updated."
     expected_links = [APPROVED_SUPPORT_LINK, GOOGLE_PRIVACY, GITHUB_PRIVACY, "/"] if privacy else [APPROVED_SUPPORT_LINK, "/privacy"]
     if canonical not in PAGES.values():
         errors.append("unregistered canonical")
@@ -184,7 +206,7 @@ def validate_source(source: str, canonical: str) -> list[str]:
     if parser.main_count != 1:
         errors.append("expected exactly one main")
     if tuple(parser.visible_text) != expected_text:
-        errors.append("visible text differs from the exact approved website/support copy")
+        errors.append("visible text differs from the exact approved website/privacy copy")
     if parser.unsafe_markup:
         errors.append("unsafe attributes or redirect markup are not permitted")
     if parser.script_count:
@@ -249,7 +271,8 @@ def run_self_test() -> int:
         privacy.replace("</main>", f"<p>{CONTROLLER_SENTENCE}</p></main>"),
         privacy.replace("<main ", '<main title="Kalpesh Patel" '),
         privacy.replace("90 days", "365 days"),
-        privacy.replace("not the full app privacy policy", "the full app privacy policy"),
+        privacy.replace("Memories are stored locally by default.", "Memories are uploaded by default."),
+        privacy.replace("private CloudKit database", "shared CloudKit database", 1),
         privacy.replace("Gmail", "another provider"),
         privacy.replace(GOOGLE_PRIVACY, "https://policies.google.com.evil.example/privacy"),
         privacy.replace(APPROVED_SUPPORT_LINK, APPROVED_SUPPORT_LINK + "&amp;body=private"),
@@ -271,7 +294,7 @@ def run_self_test() -> int:
         if repository_html_paths(root) != [Path("future/nested.html")]:
             print("self-test did not discover a nested future HTML page", file=sys.stderr)
             return 1
-    print(f"Fondary support-site self-test passed: {len(mutations) + len(privacy_mutations)} negative fixtures, 2 approved pages, future-page discovery.")
+    print(f"Fondary website self-test passed: {len(mutations) + len(privacy_mutations)} negative fixtures, 2 approved pages, future-page discovery.")
     return 0
 
 
@@ -305,6 +328,9 @@ def main() -> int:
             "A sandbox denial requires narrow escalation",
             "D-016",
             "D-027",
+            "D-039",
+            "D-040",
+            "D-041",
         ):
             if marker not in agent_text:
                 errors.append(f"AGENTS.md missing governance marker {marker}")
@@ -316,12 +342,12 @@ def main() -> int:
                 errors.append(f"AGENTS.md contains obsolete governance marker {obsolete}")
 
     if errors:
-        print("Fondary support-site validation failed:", file=sys.stderr)
+        print("Fondary website validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
 
-    print("Fondary support-site validation passed.")
+    print("Fondary website validation passed.")
     return 0
 
 

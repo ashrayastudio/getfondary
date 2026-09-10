@@ -22,25 +22,31 @@ Missing, stale, conflicting, or `UNKNOWN` evidence keeps the action `BLOCKED`.
   appear in rendered website content, HTML attributes, or customer contact
   links. The founder-approved public support email is exactly
   `appportfolio.contact@gmail.com`; no other Gmail address or alias is allowed.
-- On September 3, 2026 the founder approved a limited website/support privacy
-  notice in place of holding-only content, confirmed the shared inbox sends
-  and receives, and committed to monitoring it and deleting resolved support
-  conversations within 90 days unless legally required longer. These are
-  founder-reported operational commitments, not independently observed tests.
-- `index.html` remains product/update/support only. `privacy.html` covers only
-  website hosting and voluntary support correspondence, not the unreleased
-  app's data behavior. It may contain the previously approved exact controller
-  sentence once: `The data controller is Kalpesh Patel.` No other surface,
-  attribute, heading, footer, or marketing copy may contain the legal name.
+- On September 3, 2026 the founder approved the shared support mailbox,
+  confirmed that it sends and receives, and committed to monitoring it and
+  deleting resolved support conversations within 90 days unless legally
+  required longer. These are founder-reported operational commitments, not
+  independently observed tests.
+- On September 9, 2026 the founder approved replacing the limited
+  website/support notice with Fondary's full app privacy policy, consistent
+  with the current Fondary app records, the RateDue privacy-page structure,
+  and the reusable iOS-template controller rules. `index.html` remains
+  product/update/support only. `privacy.html` covers the app, website hosting,
+  and voluntary support correspondence. It contains the approved exact
+  controller sentence once: `The data controller is Kalpesh Patel.` No other
+  surface, attribute, heading, footer, or marketing copy may contain the legal
+  name.
 - Preserve the existing GitHub Pages source, CNAME, routes and theme. No
-  feature, price, availability, App Store, app privacy, commerce, response-time,
-  legal-compliance or data-transfer claim may be added by assumption. The
-  app's full privacy policy, release metadata and Apple/DSA remain separate
-  gates. Do not publish this narrow notice as a full app policy.
+  feature, price, availability, App Store, commerce, response-time,
+  legal-compliance or data-transfer claim may be added by assumption. App
+  privacy statements must stay synchronized with the current app behavior and
+  App Store privacy answers. Release metadata, Apple/DSA, submission, and
+  release remain separate gates.
 
 The central governing source is
 `/Users/hermes/Developer/personal-digital-products-ops`, especially D-016,
-D-027, and MIG-005/MIG-006 in `docs/DECISION-LOG.md`, `docs/CURRENT-STATE.md`, and
+D-027, D-039, D-040, D-041, and MIG-005/MIG-006 in
+`docs/DECISION-LOG.md`, `docs/CURRENT-STATE.md`, and
 `docs/PUBLIC-SURFACE-CORRECTION-PLAN.md`.
 
 ## Responsibility routing
