@@ -19,13 +19,13 @@ PAGES = {
 }
 SUPPORT_WARNING = "Please do not send private memories, health details, voice recordings, or exports."
 CONTROLLER_SENTENCE = "The data controller is Kalpesh Patel."
-GOOGLE_PRIVACY = "https://policies.google.com/privacy"
+ZOHO_PRIVACY = "https://www.zoho.com/privacy.html"
 GITHUB_PRIVACY = "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
 HOME_TEXT = (
     "Fondary",
     "Product information is being updated.",
     "Fondary support:",
-    "appportfolio.contact@gmail.com",
+    "support@madebykal.com",
     SUPPORT_WARNING,
     "The email link opens your email app. Nothing is sent or attached automatically.",
     "Privacy policy",
@@ -33,7 +33,7 @@ HOME_TEXT = (
 PRIVACY_TEXT = (
     "Fondary",
     "Privacy Policy",
-    "Effective September 10, 2026.",
+    "Effective September 14, 2026.",
     "Short version",
     "Fondary is designed to keep your memories under your control. Memories are stored locally by default. Fondary does not sell memory content, use it for advertising, or operate a server that receives memory content for syncing or AI training.",
     "Fondary does not require a separate app account. Optional personal iCloud sync uses your Apple account.",
@@ -59,24 +59,28 @@ PRIVACY_TEXT = (
     "Fondary includes no third-party analytics SDK, advertising SDK, or cross-app tracking SDK. Product and crash-quality decisions may use aggregated reports provided through Apple's App Store Connect and Xcode tools. Memory, voice, search, person, and support content is not added to product analytics.",
     "Support communications",
     "Fondary support:",
-    "appportfolio.contact@gmail.com",
+    "support@madebykal.com",
     "If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.",
     SUPPORT_WARNING,
-    "Support correspondence is handled by your email provider and Gmail. Their own privacy policies also apply.",
-    "Google privacy policy",
-    "We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Gmail are subject to their own policies.",
+    "Support correspondence is handled by your email provider and Zoho Mail. Their own privacy policies also apply.",
+    "Zoho privacy policy",
+    "We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Zoho Mail are subject to their own policies.",
     "Website hosting",
     "This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site's code adds no contact forms, analytics, advertising, or cookies.",
     "GitHub privacy statement",
     "Your choices and deletion",
     "You can keep iCloud sync off, turn it on or off in Settings, export selected content, delete an individual memory, or delete all memories. When personal sync is enabled now or later, Fondary uses content-free deletion records to prevent an older device from restoring deleted memories.",
     "Privacy questions and policy changes",
-    "Use the support contact above for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.",
+    "Email",
+    "privacy@madebykal.com",
+    "for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.",
     CONTROLLER_SENTENCE,
     "Changes to this policy will appear on this page with an updated effective date.",
     "Back to Fondary support",
 )
-APPROVED_SUPPORT_LINK = "mailto:appportfolio.contact@gmail.com?subject=Fondary%20support"
+APPROVED_SUPPORT_LINK = "mailto:support@madebykal.com?subject=Fondary%20support"
+APPROVED_PRIVACY_LINK = "mailto:privacy@madebykal.com?subject=Fondary%20privacy"
+APPROVED_EMAILS = {"support@madebykal.com", "privacy@madebykal.com", "security@madebykal.com"}
 FORBIDDEN_SOURCE_MARKERS = (
     "ashraya",
     "ashrayastudio",
@@ -192,7 +196,7 @@ def validate_source(source: str, canonical: str) -> list[str]:
     expected_text = PRIVACY_TEXT if privacy else HOME_TEXT
     expected_title = "Fondary Privacy Policy" if privacy else "Fondary — Product information is being updated"
     expected_description = "How Fondary handles app, website, and support information." if privacy else "Product information for Fondary is being updated."
-    expected_links = [APPROVED_SUPPORT_LINK, GOOGLE_PRIVACY, GITHUB_PRIVACY, "/"] if privacy else [APPROVED_SUPPORT_LINK, "/privacy"]
+    expected_links = [APPROVED_SUPPORT_LINK, ZOHO_PRIVACY, GITHUB_PRIVACY, APPROVED_PRIVACY_LINK, "/"] if privacy else [APPROVED_SUPPORT_LINK, "/privacy"]
     if canonical not in PAGES.values():
         errors.append("unregistered canonical")
     if parser.title.strip() != expected_title:
@@ -229,7 +233,7 @@ def validate_source(source: str, canonical: str) -> list[str]:
         if marker.lower() in identity_source:
             errors.append(f"forbidden claim or identity marker {marker}")
     for email in re.findall(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", unquote(public_text)):
-        if email != "appportfolio.contact@gmail.com":
+        if email not in APPROVED_EMAILS:
             errors.append("unapproved public mailbox")
     for reference in parser.resource_references:
         if reference not in expected_links:
@@ -246,9 +250,9 @@ def run_self_test() -> int:
         source.replace("<main ", '<main title="other%40gmail.com" '),
         source.replace(APPROVED_SUPPORT_LINK, "mailto:other@gmail.com?subject=Fondary%20support"),
         source.replace(APPROVED_SUPPORT_LINK, APPROVED_SUPPORT_LINK + "&amp;cc=other@gmail.com"),
-        source.replace("appportfolio.contact@gmail.com", "appportfolio.contact+fondary@gmail.com"),
-        source.replace("appportfolio.contact@gmail.com", "appportfoliocontact@gmail.com"),
-        source.replace("appportfolio.contact@gmail.com", "appportfolio.contact@gmail.com.evil.example"),
+        source.replace("support@madebykal.com", "support+fondary@madebykal.com"),
+        source.replace("support@madebykal.com", "hello@madebykal.com"),
+        source.replace("support@madebykal.com", "support@madebykal.com.evil.example"),
         source.replace("Fondary</p>", "Ashraya</p>"),
         source.replace("</main>", "<p>Download on the App Store</p></main>"),
         source.replace("</main>", "<form></form></main>"),
@@ -273,8 +277,9 @@ def run_self_test() -> int:
         privacy.replace("90 days", "365 days"),
         privacy.replace("Memories are stored locally by default.", "Memories are uploaded by default."),
         privacy.replace("private CloudKit database", "shared CloudKit database", 1),
-        privacy.replace("Gmail", "another provider"),
-        privacy.replace(GOOGLE_PRIVACY, "https://policies.google.com.evil.example/privacy"),
+        privacy.replace("Zoho Mail", "another provider"),
+        privacy.replace(ZOHO_PRIVACY, "https://www.zoho.com.evil.example/privacy.html"),
+        privacy.replace(APPROVED_PRIVACY_LINK, "mailto:support@madebykal.com?subject=Fondary%20privacy"),
         privacy.replace(APPROVED_SUPPORT_LINK, APPROVED_SUPPORT_LINK + "&amp;body=private"),
         privacy.replace("</main>", '<iframe src="https://example.invalid"></iframe></main>'),
     )

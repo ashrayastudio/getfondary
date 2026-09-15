@@ -20,8 +20,11 @@ Missing, stale, conflicting, or `UNKNOWN` evidence keeps the action `BLOCKED`.
 - The `ashrayastudio` GitHub owner and repository URL are internal technical
   infrastructure. Neither those values nor an Ashraya-branded domain may
   appear in rendered website content, HTML attributes, or customer contact
-  links. The founder-approved public support email is exactly
-  `appportfolio.contact@gmail.com`; no other Gmail address or alias is allowed.
+  links. Public support is exactly `support@madebykal.com`; privacy requests
+  use `privacy@madebykal.com`, and security reports use
+  `security@madebykal.com`. These verified Made by Kal role addresses replace
+  the legacy Gmail contact. No catch-all, domain-wide allowlist, unregistered
+  alias, or silent legacy fallback is allowed.
 - On September 3, 2026 the founder approved the shared support mailbox,
   confirmed that it sends and receives, and committed to monitoring it and
   deleting resolved support conversations within 90 days unless legally
