@@ -423,6 +423,7 @@ def collect_errors() -> list[str]:
             "--text-md: #3a4a42",
             'url("/assets/dm-sans.ttf")',
             'url("/assets/cormorant-garamond.ttf")',
+            "img { display: block; max-width: 100%; height: auto; }",
             "prefers-reduced-motion",
         ):
             if marker not in css:
