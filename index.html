@@ -3,75 +3,157 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fondary — Product information is being updated</title>
-  <meta name="description" content="Product information for Fondary is being updated.">
+  <title>Fondary — Your life, remembered</title>
+  <meta name="description" content="Capture everyday details by voice or text, then find them when you need them. Fondary keeps memories local by default.">
+  <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#f0ebe1">
   <link rel="canonical" href="https://getfondary.com/">
-  <style>
-    :root {
-      color-scheme: light;
-      --linen: #f0ebe1;
-      --paper: #fdfaf6;
-      --ink: #0a1612;
-      --teal: #2c5a54;
-      --line: #d8cec0;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body { min-height: 100%; }
-
-    body {
-      margin: 0;
-      background: var(--linen);
-      color: var(--ink);
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    main {
-      min-height: 100vh;
-      display: grid;
-      place-content: center;
-      gap: 1rem;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .product {
-      margin: 0;
-      color: var(--teal);
-      font-family: ui-serif, Georgia, serif;
-      font-size: clamp(2rem, 8vw, 4rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    .support { max-width: 32rem; line-height: 1.6; }
-    .support a { display: inline-block; max-width: 100%; min-height: 44px; padding: 0.6rem 0; color: var(--teal); overflow-wrap: anywhere; }
-    a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
-    .support p { margin: 0.5rem 0; }
-
-    h1 {
-      max-width: 32rem;
-      margin: 0;
-      border-top: 1px solid var(--line);
-      padding-top: 1rem;
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      font-weight: 500;
-      line-height: 1.5;
-    }
-  </style>
+  <link rel="icon" type="image/png" href="/assets/fondary-icon.png">
+  <link rel="apple-touch-icon" href="/assets/fondary-icon.png">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main aria-labelledby="status">
-    <p class="product">Fondary</p>
-    <h1 id="status">Product information is being updated.</h1>
-    <section class="support" aria-label="Fondary support">
-      <p>Fondary support: <a href="mailto:support@madebykal.com?subject=Fondary%20support">support@madebykal.com</a></p>
-      <p>Please do not send private memories, health details, voice recordings, or exports.</p>
-      <p>The email link opens your email app. Nothing is sent or attached automatically.</p>
-      <p><a href="/privacy">Privacy policy</a></p>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Fondary home">
+      <img src="/assets/fondary-icon.png" alt="" width="46" height="46">
+      <span>Fondary</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#how-it-works">How it works</a>
+      <a href="#privacy">Privacy</a>
+      <a href="/support/">Support</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A private memory app for iPhone and Apple Watch</p>
+        <h1>Your life,<br><em>remembered.</em></h1>
+        <p class="lede">Save the small details by voice or text. Find them again when you need them—without reorganizing your life around another notes app.</p>
+        <div class="hero-actions">
+          <span class="status-pill">Preparing for the App Store</span>
+          <a class="text-link" href="#how-it-works">See how Fondary works <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <figure class="hero-preview">
+        <div class="preview-halo" aria-hidden="true"></div>
+        <img src="/assets/fondary-home.png" alt="Fondary home screen showing sample memory cards organized by category" width="1320" height="2868">
+        <figcaption>Current Fondary interface preview</figcaption>
+      </figure>
+    </section>
+
+    <section class="trust-row" aria-label="Fondary privacy principles">
+      <span>Local by default</span>
+      <span>No separate Fondary account</span>
+      <span>Optional personal iCloud</span>
+      <span>No advertising SDK</span>
+    </section>
+
+    <section class="section story" id="how-it-works">
+      <div class="section-heading">
+        <p class="eyebrow">For the details that almost slip away</p>
+        <h2>Capture in the moment.<br>Find it in your own words.</h2>
+        <p>Fondary is for the restaurant name, the doctor’s instruction, the paint color, or the pet-care detail you’ll want later.</p>
+      </div>
+
+      <div class="steps">
+        <article>
+          <span class="step-number" aria-hidden="true">01</span>
+          <h3>Say it or type it</h3>
+          <p>Capture on iPhone by voice or text. You can also ask Siri on Apple Watch when your hands are full.</p>
+        </article>
+        <article>
+          <span class="step-number" aria-hidden="true">02</span>
+          <h3>Let categories help</h3>
+          <p>A memory can belong to several useful categories at once, so people, health, places, home, and other details stay connected.</p>
+        </article>
+        <article>
+          <span class="step-number" aria-hidden="true">03</span>
+          <h3>Ask naturally</h3>
+          <p>Search by words or meaning, filter by category, and have matching results read aloud when you want a screen-optional answer.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="interface-section" aria-labelledby="interface-title">
+      <div class="interface-copy">
+        <p class="eyebrow">A calm, focused flow</p>
+        <h2 id="interface-title">Voice in.<br><em>Voice out.</em></h2>
+        <p>Capture stays focused on one thing: getting the detail safely into Fondary. Search brings related memories together without forcing you to remember the exact wording.</p>
+        <p class="preview-note">Screens shown are current development previews and will be checked again against the release candidate.</p>
+      </div>
+      <div class="screen-pair">
+        <figure class="phone-shot capture-shot">
+          <img src="/assets/fondary-capture.png" alt="Fondary voice capture screen with selectable memory categories" width="1320" height="2868" loading="lazy">
+          <figcaption>Capture by voice or text</figcaption>
+        </figure>
+        <figure class="phone-shot search-shot">
+          <img src="/assets/fondary-search.png" alt="Fondary search screen showing sample results for a person" width="1320" height="2868" loading="lazy">
+          <figcaption>Find related details</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="privacy-band" id="privacy">
+      <div>
+        <p class="eyebrow eyebrow-light">Private by architecture</p>
+        <h2>Your memories stay under your control.</h2>
+      </div>
+      <div class="privacy-copy">
+        <p>Memories are stored in Fondary’s protected local repository by default. Personal iCloud sync is optional, off by default, and uses your private CloudKit database under your Apple account.</p>
+        <p>Fondary operates no memory-sync server, includes no advertising SDK, and does not sell memory content. Voice recognition requires Apple’s on-device support.</p>
+        <a class="button-light" href="/privacy">Read the privacy policy</a>
+      </div>
+    </section>
+
+    <section class="section access-section" aria-labelledby="access-title">
+      <div class="section-heading">
+        <p class="eyebrow">A clear free boundary</p>
+        <h2 id="access-title">Start with the complete memory loop.</h2>
+        <p>Capture, search, read-back, Siri, Apple Watch capture, and optional personal iCloud sync are included before any upgrade.</p>
+      </div>
+      <div class="access-grid">
+        <article class="access-card">
+          <p class="card-label">Included</p>
+          <h3>25 memories</h3>
+          <p>Your 26th memory is saved as a grace capture before Fondary offers an upgrade.</p>
+        </article>
+        <article class="access-card">
+          <p class="card-label">Paid plans</p>
+          <h3>Unlimited memories</h3>
+          <p>Paid plans add unlimited memories plus PDF and JSON export. Localized prices will be shown by the App Store.</p>
+        </article>
+        <article class="access-card">
+          <p class="card-label">Always readable</p>
+          <h3>Your existing archive</h3>
+          <p>If a subscription lapses, existing memories remain readable. New captures and export return to the free limits.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="closing">
+      <img src="/assets/fondary-icon.png" alt="" width="88" height="88" loading="lazy">
+      <p class="eyebrow">Fondary is in pre-release testing</p>
+      <h2>Keep the detail.<br><em>Leave the mental load behind.</em></h2>
+      <p>Need help while testing? Email <a class="text-link" href="mailto:support@madebykal.com?subject=Fondary%20support">support@madebykal.com</a>.</p>
+      <p class="support-warning">Please do not send private memories, health details, voice recordings, or exports.</p>
+      <a class="button" href="/support/">Visit Fondary support</a>
     </section>
   </main>
+
+  <footer>
+    <div>
+      <strong>Fondary</strong>
+      <span>Your life, remembered.</span>
+    </div>
+    <nav aria-label="Footer navigation">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/support/">Support</a>
+    </nav>
+    <p>Preparing for the App Store. No public app availability is claimed.</p>
+  </footer>
 </body>
 </html>

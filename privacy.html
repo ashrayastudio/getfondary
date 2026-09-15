@@ -5,116 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fondary Privacy Policy</title>
   <meta name="description" content="How Fondary handles app, website, and support information.">
+  <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#f0ebe1">
   <link rel="canonical" href="https://getfondary.com/privacy">
-  <style>
-    :root {
-      color-scheme: light;
-      --linen: #f0ebe1;
-      --ink: #0a1612;
-      --teal: #2c5a54;
-      --line: #d8cec0;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body { min-height: 100%; }
-
-    body {
-      margin: 0;
-      background: var(--linen);
-      color: var(--ink);
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    main {
-      min-height: 100vh;
-      max-width: 44rem;
-      margin: 0 auto;
-      padding: clamp(1.25rem, 5vw, 3rem);
-      line-height: 1.65;
-    }
-
-    .product {
-      margin: 0;
-      color: var(--teal);
-      font-family: ui-serif, Georgia, serif;
-      font-size: clamp(2rem, 8vw, 4rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    a { display: inline-block; max-width: 100%; min-height: 44px; padding: 0.5rem 0; color: var(--teal); overflow-wrap: anywhere; }
-    a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
-    h2 { margin-top: 2rem; font-size: 1.2rem; line-height: 1.4; }
-
-    h1 {
-      margin: 1rem 0;
-      border-top: 1px solid var(--line);
-      padding-top: 1rem;
-      font-size: clamp(1.5rem, 5vw, 2rem);
-      font-weight: 500;
-      line-height: 1.5;
-    }
-  </style>
+  <link rel="icon" type="image/png" href="/assets/fondary-icon.png">
+  <link rel="apple-touch-icon" href="/assets/fondary-icon.png">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main aria-labelledby="privacy-title">
-    <p class="product">Fondary</p>
-    <h1 id="privacy-title">Privacy Policy</h1>
-    <p>Effective September 14, 2026.</p>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Fondary home"><img src="/assets/fondary-icon.png" alt="" width="46" height="46"><span>Fondary</span></a>
+    <nav aria-label="Main navigation"><a href="/">Home</a><a href="/support/">Support</a><a href="/terms/">Terms</a></nav>
+  </header>
 
-    <h2>Short version</h2>
-    <p>Fondary is designed to keep your memories under your control. Memories are stored locally by default. Fondary does not sell memory content, use it for advertising, or operate a server that receives memory content for syncing or AI training.</p>
-    <p>Fondary does not require a separate app account. Optional personal iCloud sync uses your Apple account.</p>
-    <p>If you enable personal iCloud sync, Apple stores and synchronizes your memories through your private CloudKit database. Personal sync is off by default. Family collaboration and urgent family alerts are not included in this release.</p>
+  <main class="subpage-main" id="main">
+    <header class="subpage-header">
+      <p class="eyebrow">Private by architecture</p>
+      <h1>Privacy Policy</h1>
+      <p class="lede">How Fondary handles app, website, and support information.</p>
+    </header>
 
-    <h2>Information you add</h2>
-    <p>You may enter memory titles, descriptions, dates, categories, tags, and names of people. This content can be sensitive. Fondary stores it in the app's file-protected local repository until you delete it.</p>
+    <article class="document">
+      <p class="updated">Effective September 14, 2026.</p>
 
-    <h2>Voice capture</h2>
-    <p>Voice audio is used transiently for speech recognition and is not saved as an audio recording. Fondary requires Apple's on-device speech recognition support and otherwise asks you to type. A saved transcript becomes memory content.</p>
+      <section>
+        <h2>Short version</h2>
+        <p>Fondary is designed to keep your memories under your control. Memories are stored locally by default. Fondary does not sell memory content, use it for advertising, or operate a server that receives memory content for syncing or AI training.</p>
+        <p>Fondary does not require a separate app account. Optional personal iCloud sync uses your Apple account.</p>
+        <p>If you enable personal iCloud sync, Apple stores and synchronizes your memories through your private CloudKit database. Personal sync is off by default. Family collaboration and urgent family alerts are not included in this release.</p>
+      </section>
 
-    <h2>Optional personal iCloud sync</h2>
-    <p>Personal iCloud sync is available at every Fondary tier. If you enable it, Fondary sends memory records to your private CloudKit database under your Apple account. Fondary does not operate the sync server.</p>
-    <p>Deleting a synchronized memory creates a content-free deletion record so an older device cannot restore the deleted memory. That record contains only the memory's random identifier and deletion date, not its title, description, people, categories, tags, or search data. A deletion made while sync is off is kept locally and synchronized if you later turn sync on.</p>
-    <p>Turning sync off stops CloudKit work. It does not delete records already in your iCloud database. Apple controls iCloud account processing and infrastructure under Apple's own terms and privacy policy.</p>
+      <section>
+        <h2>Information you add</h2>
+        <p>You may enter memory titles, descriptions, dates, categories, tags, and names of people. This content can be sensitive. Fondary stores it in the app’s file-protected local repository until you delete it.</p>
+      </section>
 
-    <h2>Apple Watch capture</h2>
-    <p>The Fondary Watch app is capture-only. Before the iPhone confirms a save, the Watch may retain the newly dictated text with a random identifier, timestamp, and delivery state in a file-protected outbox. It transfers that pending capture to the paired iPhone using Apple's WatchConnectivity service.</p>
-    <p>After a saved or rejected acknowledgement, the Watch deletes the pending entry. Fondary does not copy your memory archive, search index, or saved memory bodies to the Watch.</p>
+      <section>
+        <h2>Voice capture</h2>
+        <p>Voice audio is used transiently for speech recognition and is not saved as an audio recording. Fondary requires Apple’s on-device speech-recognition support and otherwise asks you to type. A saved transcript becomes memory content.</p>
+      </section>
 
-    <h2>Purchases and Apple services</h2>
-    <p>Apple processes App Store purchases, subscription state, and restores. Fondary keeps a limited local entitlement cache so temporary StoreKit unavailability does not incorrectly remove paid access.</p>
-    <p>Fondary also uses Apple system services for optional biometric lock, Siri and App Intents, local notifications, speech synthesis, and user-selected sharing destinations.</p>
+      <section>
+        <h2>Optional personal iCloud sync</h2>
+        <p>Personal iCloud sync is off by default and is free at every Fondary tier. If you enable it, Fondary sends memory records to your private CloudKit database under your Apple account. Fondary does not operate the sync server.</p>
+        <p>Deleting a synchronized memory creates a content-free deletion record so an older device cannot restore the deleted memory. That record contains only the memory’s random identifier and deletion date—not its title, description, people, categories, tags, or search data. A deletion made while sync is off is kept locally and synchronized if you later turn sync on.</p>
+        <p>Turning sync off stops CloudKit work. It does not delete records already in your iCloud database. Apple controls iCloud account processing and infrastructure under Apple’s own terms and privacy policy.</p>
+      </section>
 
-    <h2>Sharing and exports</h2>
-    <p>You can create PDF or JSON exports or open Apple's share sheet. Plain-text sharing first shows the exact payload, includes only the title by default, and lets you explicitly add memory details or the date. Fondary sends an export only to the destination you select.</p>
-    <p>Exports may contain private memory content. Review the destination and preview before sharing. Family collaboration, participant invitations, shared CloudKit databases, and urgent recipient notifications are not part of this release.</p>
+      <section>
+        <h2>Apple Watch capture</h2>
+        <p>The Fondary Watch app is capture-only. Before the iPhone confirms a save, the Watch may retain the newly dictated text together with a random identifier, timestamp, and delivery state in a file-protected outbox. It transfers that pending capture to the paired iPhone using Apple’s WatchConnectivity service.</p>
+        <p>After a saved or rejected acknowledgement, the Watch deletes the pending entry. Fondary does not copy your memory archive, search index, or saved memory bodies to the Watch.</p>
+      </section>
 
-    <h2>Analytics, advertising, and tracking</h2>
-    <p>Fondary includes no third-party analytics SDK, advertising SDK, or cross-app tracking SDK. Product and crash-quality decisions may use aggregated reports provided through Apple's App Store Connect and Xcode tools. Memory, voice, search, person, and support content is not added to product analytics.</p>
+      <section>
+        <h2>Purchases and Apple services</h2>
+        <p>Apple processes App Store purchases, subscription state, and restores. Fondary keeps a limited local entitlement cache so temporary StoreKit unavailability does not incorrectly remove paid access.</p>
+        <p>Fondary also uses Apple system services for optional biometric lock, Siri and App Intents, local notifications, speech synthesis, and user-selected sharing destinations.</p>
+      </section>
 
-    <h2>Support communications</h2>
-    <p>Fondary support: <a href="mailto:support@madebykal.com?subject=Fondary%20support">support@madebykal.com</a></p>
-    <p>If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.</p>
-    <p>Please do not send private memories, health details, voice recordings, or exports.</p>
-    <p>Support correspondence is handled by your email provider and Zoho Mail. Their own privacy policies also apply.</p>
-    <p><a href="https://www.zoho.com/privacy.html">Zoho privacy policy</a></p>
-    <p>We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Zoho Mail are subject to their own policies.</p>
+      <section>
+        <h2>Sharing and exports</h2>
+        <p>You can create PDF or JSON exports or open Apple’s share sheet. Plain-text sharing first shows the exact payload, includes only the title by default, and lets you explicitly add the memory details or date. Fondary sends an export only to the destination you select.</p>
+        <p>Exports may contain private memory content. Review the destination and preview before sharing. Family collaboration, participant invitations, shared CloudKit databases, and urgent recipient notifications are not part of this release.</p>
+      </section>
 
-    <h2>Website hosting</h2>
-    <p>This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site's code adds no contact forms, analytics, advertising, or cookies.</p>
-    <p><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></p>
+      <section>
+        <h2>Analytics, advertising, and tracking</h2>
+        <p>Fondary includes no third-party analytics SDK, advertising SDK, or cross-app tracking SDK. Product and crash-quality decisions may use aggregated reports provided through Apple’s App Store Connect and Xcode tools. Memory, voice, search, person, and support content is not added to product analytics.</p>
+      </section>
 
-    <h2>Your choices and deletion</h2>
-    <p>You can keep iCloud sync off, turn it on or off in Settings, export selected content, delete an individual memory, or delete all memories. When personal sync is enabled now or later, Fondary uses content-free deletion records to prevent an older device from restoring deleted memories.</p>
+      <section>
+        <h2>Support communications</h2>
+        <p>Fondary support: <a href="mailto:support@madebykal.com?subject=Fondary%20support">support@madebykal.com</a></p>
+        <p>If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.</p>
+        <p>Please do not send private memories, health details, voice recordings, or exports.</p>
+        <p>Support correspondence is handled by your email provider and Zoho Mail. Their own privacy policies also apply.</p>
+        <p><a href="https://www.zoho.com/privacy.html">Zoho privacy policy</a></p>
+        <p>We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Zoho Mail are subject to their own policies.</p>
+      </section>
 
-    <h2>Privacy questions and policy changes</h2>
-    <p>Email <a href="mailto:privacy@madebykal.com?subject=Fondary%20privacy">privacy@madebykal.com</a> for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.</p>
-    <p>The data controller is Kalpesh Patel.</p>
-    <p>Changes to this policy will appear on this page with an updated effective date.</p>
-    <p><a href="/">Back to Fondary support</a></p>
+      <section>
+        <h2>Website hosting</h2>
+        <p>This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site’s code adds no contact forms, analytics, advertising, or cookies.</p>
+        <p><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></p>
+      </section>
+
+      <section>
+        <h2>Your choices and deletion</h2>
+        <p>You can keep iCloud sync off, turn it on or off in Settings, export selected content, delete an individual memory, or delete all memories. When personal sync is enabled now or later, Fondary uses content-free deletion records to prevent an older device from restoring deleted memories.</p>
+      </section>
+
+      <section>
+        <h2>Privacy questions and policy changes</h2>
+        <p>Email <a href="mailto:privacy@madebykal.com?subject=Fondary%20privacy">privacy@madebykal.com</a> for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.</p>
+        <p>Email <a href="mailto:security@madebykal.com?subject=Fondary%20security">security@madebykal.com</a> for security reports. Please do not include private memory content in the initial message.</p>
+        <p>The data controller is Kalpesh Patel.</p>
+        <p>Changes to this policy will appear on this page with an updated effective date.</p>
+      </section>
+    </article>
   </main>
+
+  <footer>
+    <div><strong>Fondary</strong><span>Your life, remembered.</span></div>
+    <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/terms/">Terms</a><a href="/support/">Support</a></nav>
+    <p>Fondary privacy information.</p>
+  </footer>
 </body>
 </html>

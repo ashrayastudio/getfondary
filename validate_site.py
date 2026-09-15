@@ -1,137 +1,136 @@
 #!/usr/bin/env python3
-"""Fail-closed validation for the approved Fondary website and privacy policy."""
+"""Dependency-free structural, privacy, and identity checks for getfondary.com."""
 
 from __future__ import annotations
 
-from html.parser import HTMLParser
+from hashlib import sha256
 from html import unescape
+from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote
+from urllib.parse import parse_qsl, unquote, urlsplit
 import re
 import sys
-import tempfile
+import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parent
-PAGES = {
-    Path("index.html"): "https://getfondary.com/",
-    Path("privacy.html"): "https://getfondary.com/privacy",
+CANONICAL_ORIGIN = "https://getfondary.com"
+PAGE_PATHS = {
+    Path("index.html"): "/",
+    Path("privacy.html"): "/privacy",
+    Path("support/index.html"): "/support/",
+    Path("terms/index.html"): "/terms/",
 }
-SUPPORT_WARNING = "Please do not send private memories, health details, voice recordings, or exports."
-CONTROLLER_SENTENCE = "The data controller is Kalpesh Patel."
-ZOHO_PRIVACY = "https://www.zoho.com/privacy.html"
-GITHUB_PRIVACY = "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
-HOME_TEXT = (
-    "Fondary",
-    "Product information is being updated.",
-    "Fondary support:",
-    "support@madebykal.com",
-    SUPPORT_WARNING,
-    "The email link opens your email app. Nothing is sent or attached automatically.",
-    "Privacy policy",
+PAGE_MAILBOXES = {
+    Path("index.html"): {"support@madebykal.com"},
+    Path("privacy.html"): {
+        "support@madebykal.com",
+        "privacy@madebykal.com",
+        "security@madebykal.com",
+    },
+    Path("support/index.html"): {"support@madebykal.com"},
+    Path("terms/index.html"): {"support@madebykal.com"},
+}
+SUPPORT_EMAIL = "support@madebykal.com"
+PRIVACY_EMAIL = "privacy@madebykal.com"
+SECURITY_EMAIL = "security@madebykal.com"
+APPROVED_PUBLIC_EMAILS = {SUPPORT_EMAIL, PRIVACY_EMAIL, SECURITY_EMAIL}
+LEGAL_OPERATOR_NAME = "Kalpesh Patel"
+CONTROLLER_DISCLOSURE = f"The data controller is {LEGAL_OPERATOR_NAME}."
+EMAIL_PATTERN = re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.IGNORECASE)
+FORBIDDEN_PUBLIC_IDENTITY = ("ashraya", "ashrayastudio", "copyright", "©")
+FORBIDDEN_TRACKERS = (
+    "google-analytics",
+    "googletagmanager",
+    "facebook.net",
+    "segment.io",
+    "mixpanel",
+    "hotjar",
 )
-PRIVACY_TEXT = (
-    "Fondary",
-    "Privacy Policy",
-    "Effective September 14, 2026.",
-    "Short version",
-    "Fondary is designed to keep your memories under your control. Memories are stored locally by default. Fondary does not sell memory content, use it for advertising, or operate a server that receives memory content for syncing or AI training.",
-    "Fondary does not require a separate app account. Optional personal iCloud sync uses your Apple account.",
-    "If you enable personal iCloud sync, Apple stores and synchronizes your memories through your private CloudKit database. Personal sync is off by default. Family collaboration and urgent family alerts are not included in this release.",
-    "Information you add",
-    "You may enter memory titles, descriptions, dates, categories, tags, and names of people. This content can be sensitive. Fondary stores it in the app's file-protected local repository until you delete it.",
-    "Voice capture",
-    "Voice audio is used transiently for speech recognition and is not saved as an audio recording. Fondary requires Apple's on-device speech recognition support and otherwise asks you to type. A saved transcript becomes memory content.",
-    "Optional personal iCloud sync",
-    "Personal iCloud sync is available at every Fondary tier. If you enable it, Fondary sends memory records to your private CloudKit database under your Apple account. Fondary does not operate the sync server.",
-    "Deleting a synchronized memory creates a content-free deletion record so an older device cannot restore the deleted memory. That record contains only the memory's random identifier and deletion date, not its title, description, people, categories, tags, or search data. A deletion made while sync is off is kept locally and synchronized if you later turn sync on.",
-    "Turning sync off stops CloudKit work. It does not delete records already in your iCloud database. Apple controls iCloud account processing and infrastructure under Apple's own terms and privacy policy.",
-    "Apple Watch capture",
-    "The Fondary Watch app is capture-only. Before the iPhone confirms a save, the Watch may retain the newly dictated text with a random identifier, timestamp, and delivery state in a file-protected outbox. It transfers that pending capture to the paired iPhone using Apple's WatchConnectivity service.",
-    "After a saved or rejected acknowledgement, the Watch deletes the pending entry. Fondary does not copy your memory archive, search index, or saved memory bodies to the Watch.",
-    "Purchases and Apple services",
-    "Apple processes App Store purchases, subscription state, and restores. Fondary keeps a limited local entitlement cache so temporary StoreKit unavailability does not incorrectly remove paid access.",
-    "Fondary also uses Apple system services for optional biometric lock, Siri and App Intents, local notifications, speech synthesis, and user-selected sharing destinations.",
-    "Sharing and exports",
-    "You can create PDF or JSON exports or open Apple's share sheet. Plain-text sharing first shows the exact payload, includes only the title by default, and lets you explicitly add memory details or the date. Fondary sends an export only to the destination you select.",
-    "Exports may contain private memory content. Review the destination and preview before sharing. Family collaboration, participant invitations, shared CloudKit databases, and urgent recipient notifications are not part of this release.",
-    "Analytics, advertising, and tracking",
-    "Fondary includes no third-party analytics SDK, advertising SDK, or cross-app tracking SDK. Product and crash-quality decisions may use aggregated reports provided through Apple's App Store Connect and Xcode tools. Memory, voice, search, person, and support content is not added to product analytics.",
-    "Support communications",
-    "Fondary support:",
-    "support@madebykal.com",
-    "If you email support, your email address and the message or attachments you choose to send are used to respond to your request. The email link opens your email app. Nothing is sent or attached automatically.",
-    SUPPORT_WARNING,
-    "Support correspondence is handled by your email provider and Zoho Mail. Their own privacy policies also apply.",
-    "Zoho privacy policy",
-    "We monitor the support inbox and delete resolved conversations from the support mailbox within 90 days, unless legally required to retain them longer. Copies retained by your email provider or Zoho Mail are subject to their own policies.",
-    "Website hosting",
-    "This site is hosted on GitHub Pages. GitHub receives technical request information, such as your IP address, when serving the site. This site's code adds no contact forms, analytics, advertising, or cookies.",
-    "GitHub privacy statement",
-    "Your choices and deletion",
-    "You can keep iCloud sync off, turn it on or off in Settings, export selected content, delete an individual memory, or delete all memories. When personal sync is enabled now or later, Fondary uses content-free deletion records to prevent an older device from restoring deleted memories.",
-    "Privacy questions and policy changes",
-    "Email",
-    "privacy@madebykal.com",
-    "for privacy questions or to request access, correction, or deletion of your support messages. Do not send identity documents or sensitive personal information with your initial request.",
-    CONTROLLER_SENTENCE,
-    "Changes to this policy will appear on this page with an updated effective date.",
-    "Back to Fondary support",
-)
-APPROVED_SUPPORT_LINK = "mailto:support@madebykal.com?subject=Fondary%20support"
-APPROVED_PRIVACY_LINK = "mailto:privacy@madebykal.com?subject=Fondary%20privacy"
-APPROVED_EMAILS = {"support@madebykal.com", "privacy@madebykal.com", "security@madebykal.com"}
-FORBIDDEN_SOURCE_MARKERS = (
-    "ashraya",
-    "ashrayastudio",
-    "kalpesh patel",
-    "copyright",
-    "©",
-)
+APPROVED_EXTERNAL_ANCHORS = {
+    "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "https://www.zoho.com/privacy.html",
+    "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+}
+REQUIRED_PAGE_TEXT = {
+    Path("index.html"): (
+        "Your life,",
+        "remembered.",
+        "Preparing for the App Store",
+        "Capture in the moment.",
+        "Find it in your own words.",
+        "Local by default",
+        "Optional personal iCloud",
+        "25 memories",
+        "support@madebykal.com",
+        "Please do not send private memories, health details, voice recordings, or exports.",
+        "No public app availability is claimed.",
+    ),
+    Path("privacy.html"): (
+        "Effective September 14, 2026.",
+        "Memories are stored locally by default.",
+        "Personal sync is off by default.",
+        "private CloudKit database",
+        "Voice audio is used transiently",
+        "Fondary Watch app is capture-only",
+        "no third-party analytics SDK",
+        "Please do not send private memories, health details, voice recordings, or exports.",
+        CONTROLLER_DISCLOSURE,
+    ),
+    Path("support/index.html"): (
+        "A clear next step.",
+        "Restore Purchases",
+        "Can support recover my memories?",
+        "Nothing is sent or attached automatically.",
+        "Please do not send private memories, health details, voice recordings, or exports.",
+    ),
+    Path("terms/index.html"): (
+        "Terms of Use",
+        "Apple Standard End User License Agreement",
+        "existing memories remain readable",
+        "Please do not send private memory content.",
+    ),
+}
+EXPECTED_ASSET_SHA256 = {
+    Path("assets/fondary-icon.png"): "92b7f44a9acc4fbcc9135ac241deb4bc741bd8c29ade3de1d56e139068a04350",
+    Path("assets/fondary-home.png"): "c7469c21fd9ca94f002f005a977adeda7ca0e359e2b9788b0b7d399f2df0f18c",
+    Path("assets/fondary-capture.png"): "6b142fae9890e9afec91e2708643d4cc21d89fa7108a08a3333438299b6cc7a8",
+    Path("assets/fondary-search.png"): "346e12344eddcb68c73c684294217999ddb54cdafce143ba16b065c293b3e457",
+}
 
 
-def repository_html_paths(root: Path = ROOT) -> list[Path]:
-    """Return every repository HTML source while excluding Git internals."""
-    return sorted(
-        path.relative_to(root)
-        for path in root.rglob("*.html")
-        if ".git" not in path.relative_to(root).parts
-    )
-
-
-class SupportPageParser(HTMLParser):
+class PageParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.body_depth = 0
-        self.ignored_depth = 0
         self.title_depth = 0
         self.title = ""
-        self.description = ""
-        self.canonical = ""
         self.h1_count = 0
         self.main_count = 0
+        self.description = ""
+        self.canonical = ""
+        self.internal_links: list[str] = []
+        self.external_anchors: list[str] = []
+        self.image_errors: list[str] = []
         self.script_count = 0
         self.form_count = 0
-        self.anchor_count = 0
         self.embedded_count = 0
-        self.resource_references: list[str] = []
-        self.links: list[str] = []
+        self.resource_dependencies: list[str] = []
         self.attribute_values: list[str] = []
-        self.visible_text: list[str] = []
+        self.rendered_text: list[str] = []
+        self.ignored_depth = 0
+        self.skip_link = False
         self.unsafe_markup = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
-        self.attribute_values.extend(value for _, value in attrs if value)
+        self.attribute_values.extend(value for value in values.values() if value)
         if len(values) != len(attrs) or any(name.startswith("on") for name in values):
             self.unsafe_markup = True
         if tag == "meta" and values.get("http-equiv"):
             self.unsafe_markup = True
         if any(name in values for name in ("srcdoc", "srcset", "ping", "action", "formaction")):
             self.unsafe_markup = True
-        if tag == "body":
-            self.body_depth += 1
-        elif tag in {"style", "script"}:
+        if tag in {"style", "script"}:
             self.ignored_depth += 1
         if tag == "title":
             self.title_depth += 1
@@ -142,179 +141,252 @@ class SupportPageParser(HTMLParser):
         elif tag == "script":
             self.script_count += 1
             if values.get("src"):
-                self.resource_references.append(values["src"] or "")
+                self.resource_dependencies.append(values["src"] or "")
         elif tag == "form":
             self.form_count += 1
-        elif tag == "a":
-            self.anchor_count += 1
-            self.links.append(values.get("href") or "")
-            if values.get("href"):
-                self.resource_references.append(values["href"] or "")
-        elif tag in {"img", "iframe", "object", "embed", "source", "audio", "video", "svg", "base"}:
+        elif tag in {"iframe", "object", "embed", "audio", "video"}:
             self.embedded_count += 1
             reference = values.get("src") or values.get("data") or ""
             if reference:
-                self.resource_references.append(reference)
+                self.resource_dependencies.append(reference)
         elif tag == "meta" and values.get("name") == "description":
             self.description = values.get("content") or ""
         elif tag == "link" and values.get("rel") == "canonical":
             self.canonical = values.get("href") or ""
         elif tag == "link":
-            if values.get("href"):
-                self.resource_references.append(values["href"] or "")
+            href = values.get("href") or ""
+            if href:
+                self.resource_dependencies.append(href)
+                if href.startswith("/"):
+                    self.internal_links.append(href)
+        elif tag == "a":
+            href = values.get("href") or ""
+            if values.get("class") == "skip-link" and href == "#main":
+                self.skip_link = True
+            if href.startswith("/"):
+                self.internal_links.append(href)
+            elif urlsplit(href).scheme in {"http", "https"}:
+                self.external_anchors.append(href)
+        elif tag == "img":
+            if "alt" not in values:
+                self.image_errors.append(
+                    f"image {values.get('src', '<missing src>')} has no alt attribute"
+                )
+            src = values.get("src") or ""
+            if src:
+                self.resource_dependencies.append(src)
+                if src.startswith("/"):
+                    self.internal_links.append(src)
 
     def handle_endtag(self, tag: str) -> None:
-        if tag == "body" and self.body_depth:
-            self.body_depth -= 1
-        elif tag in {"style", "script"} and self.ignored_depth:
-            self.ignored_depth -= 1
         if tag == "title" and self.title_depth:
             self.title_depth -= 1
+        if tag in {"style", "script"} and self.ignored_depth:
+            self.ignored_depth -= 1
 
     def handle_data(self, data: str) -> None:
         if self.title_depth:
             self.title += data
-        if self.body_depth and not self.ignored_depth:
+        if not self.ignored_depth:
             normalized = " ".join(data.split())
             if normalized:
-                self.visible_text.append(normalized)
+                self.rendered_text.append(normalized)
 
 
-def validate_source(source: str, canonical: str) -> list[str]:
-    parser = SupportPageParser()
+def repository_html_paths() -> list[Path]:
+    return sorted(
+        path.relative_to(ROOT)
+        for path in ROOT.rglob("*.html")
+        if ".git" not in path.relative_to(ROOT).parts
+    )
+
+
+def local_target(reference: str) -> Path:
+    path = urlsplit(reference).path
+    if path == "/privacy":
+        return ROOT / "privacy.html"
+    candidate = ROOT / path.lstrip("/")
+    if path.endswith("/"):
+        candidate /= "index.html"
+    return candidate
+
+
+def page_parser(source: str) -> PageParser:
+    parser = PageParser()
     parser.feed(source)
-    errors: list[str] = []
-    decoded = source
-    for _ in range(5):
-        decoded = unquote(unescape(decoded))
-    lowered = decoded.lower()
-    public_text = " ".join(
-        [parser.title, parser.description, *parser.visible_text, *parser.attribute_values]
-    ).lower()
+    return parser
 
-    privacy = canonical == PAGES[Path("privacy.html")]
-    expected_text = PRIVACY_TEXT if privacy else HOME_TEXT
-    expected_title = "Fondary Privacy Policy" if privacy else "Fondary — Product information is being updated"
-    expected_description = "How Fondary handles app, website, and support information." if privacy else "Product information for Fondary is being updated."
-    expected_links = [APPROVED_SUPPORT_LINK, ZOHO_PRIVACY, GITHUB_PRIVACY, APPROVED_PRIVACY_LINK, "/"] if privacy else [APPROVED_SUPPORT_LINK, "/privacy"]
-    if canonical not in PAGES.values():
-        errors.append("unregistered canonical")
-    if parser.title.strip() != expected_title:
-        errors.append("unexpected title")
-    if parser.description != expected_description:
-        errors.append("unexpected meta description")
-    if parser.canonical != canonical:
-        errors.append("unexpected canonical")
-    if parser.h1_count != 1:
-        errors.append("expected exactly one h1")
-    if parser.main_count != 1:
-        errors.append("expected exactly one main")
-    if tuple(parser.visible_text) != expected_text:
-        errors.append("visible text differs from the exact approved website/privacy copy")
-    if parser.unsafe_markup:
-        errors.append("unsafe attributes or redirect markup are not permitted")
+
+def public_policy_errors(
+    source: str,
+    parser: PageParser,
+    *,
+    allow_controller_disclosure: bool = False,
+) -> list[str]:
+    errors: list[str] = []
+    rendered_text = " ".join(parser.rendered_text)
+    public_surface_text = " ".join(
+        [parser.title, parser.description, *parser.rendered_text, *parser.attribute_values]
+    )
+    decoded_surface = unquote(unescape(public_surface_text)).lower()
+    decoded_source = unquote(unescape(source)).lower()
+
+    for marker in FORBIDDEN_PUBLIC_IDENTITY:
+        if marker.lower() in decoded_source or marker.lower() in decoded_surface:
+            errors.append(f"forbidden public identity marker {marker}")
+
+    operator_count = decoded_surface.count(LEGAL_OPERATOR_NAME.lower())
+    if allow_controller_disclosure:
+        if (
+            source.count(CONTROLLER_DISCLOSURE) != 1
+            or rendered_text.count(CONTROLLER_DISCLOSURE) != 1
+            or operator_count != 1
+        ):
+            errors.append("privacy page must contain exactly one approved controller disclosure")
+    elif LEGAL_OPERATOR_NAME.lower() in decoded_source or operator_count:
+        errors.append(f"forbidden public identity marker {LEGAL_OPERATOR_NAME}")
+
     if parser.script_count:
         errors.append("JavaScript is not permitted")
     if parser.form_count:
         errors.append("forms are not permitted")
-    if parser.links != expected_links:
-        errors.append("links differ from the exact approved route/mail/privacy set")
     if parser.embedded_count:
-        errors.append("embedded assets or content are not permitted")
-    if "@import" in lowered or "url(" in lowered:
-        errors.append("external or referenced CSS assets are not permitted")
-    identity_source = lowered
-    if privacy:
-        exact_paragraph = f"<p>{CONTROLLER_SENTENCE}</p>"
-        if source.count(exact_paragraph) != 1:
-            errors.append("exactly one approved controller paragraph is required on privacy")
-        identity_source = identity_source.replace(exact_paragraph.lower(), "", 1)
-    for marker in FORBIDDEN_SOURCE_MARKERS:
-        if marker.lower() in identity_source:
-            errors.append(f"forbidden claim or identity marker {marker}")
-    for email in re.findall(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", unquote(public_text)):
-        if email not in APPROVED_EMAILS:
-            errors.append("unapproved public mailbox")
-    for reference in parser.resource_references:
-        if reference not in expected_links:
-            errors.append("unapproved resource reference")
+        errors.append("embedded content is not permitted")
+    if parser.unsafe_markup:
+        errors.append("unsafe attributes or redirect markup are not permitted")
+
+    for reference in parser.resource_dependencies:
+        parsed = urlsplit(reference)
+        if parsed.scheme in {"http", "https"} or reference.startswith("//"):
+            errors.append(f"external runtime dependency {reference}")
+
+    for reference in parser.external_anchors:
+        if reference not in APPROVED_EXTERNAL_ANCHORS:
+            errors.append(f"unapproved external link {reference}")
+
+    for email in EMAIL_PATTERN.findall(decoded_surface):
+        if email.casefold() not in APPROVED_PUBLIC_EMAILS:
+            errors.append("email outside approved exact mailbox set")
+
+    for reference in parser.attribute_values:
+        decoded = unquote(unescape(reference))
+        if not decoded.casefold().startswith("mailto:"):
+            continue
+        parsed = urlsplit(decoded)
+        headers = parse_qsl(parsed.query, keep_blank_values=True)
+        if (
+            parsed.path.casefold() not in APPROVED_PUBLIC_EMAILS
+            or parsed.netloc
+            or parsed.fragment
+            or any(ord(character) < 32 for character in decoded)
+            or len(headers) != 1
+            or headers[0][0] != "subject"
+            or not headers[0][1].startswith("Fondary ")
+        ):
+            errors.append("unapproved Fondary mail link")
     return errors
 
 
-def run_self_test() -> int:
-    source = (ROOT / "index.html").read_text(encoding="utf-8")
-    mutations = (
-        source.replace("<main ", '<main title="Ashraya&#32;Studio" '),
-        source.replace("<main ", '<main title="%2541shraya" '),
-        source.replace("<main ", '<main title="Kalpesh Patel" '),
-        source.replace("<main ", '<main title="other%40gmail.com" '),
-        source.replace(APPROVED_SUPPORT_LINK, "mailto:other@gmail.com?subject=Fondary%20support"),
-        source.replace(APPROVED_SUPPORT_LINK, APPROVED_SUPPORT_LINK + "&amp;cc=other@gmail.com"),
-        source.replace("support@madebykal.com", "support+fondary@madebykal.com"),
-        source.replace("support@madebykal.com", "hello@madebykal.com"),
-        source.replace("support@madebykal.com", "support@madebykal.com.evil.example"),
-        source.replace("Fondary</p>", "Ashraya</p>"),
-        source.replace("</main>", "<p>Download on the App Store</p></main>"),
-        source.replace("</main>", "<form></form></main>"),
-        source.replace("</main>", "<script></script></main>"),
-        source.replace("</main>", '<img src="https://example.invalid/pixel.png" alt=""></main>'),
-        source.replace("</main>", '<a href="mailto:test@example.invalid">Contact</a></main>'),
-        source.replace("<body>", '<body onload="alert(1)">'),
-        source.replace("</head>", '<meta http-equiv="refresh" content="0;url=https://example.invalid"></head>'),
-        source.replace('href="/privacy"', 'href="/privacy" ping="https://example.invalid"'),
-        source.replace("</main>", '<p>The data controller is Kalpesh Patel.</p></main>'),
-    )
-    for number, mutation in enumerate(mutations, start=1):
-        if not validate_source(mutation, PAGES[Path("index.html")]):
-            print(f"self-test mutation {number} was not rejected", file=sys.stderr)
-            return 1
-    privacy = (ROOT / "privacy.html").read_text(encoding="utf-8")
-    privacy_mutations = (
-        privacy.replace(CONTROLLER_SENTENCE, "The data controller is Fondary."),
-        privacy.replace(f"<p>{CONTROLLER_SENTENCE}</p>", ""),
-        privacy.replace("</main>", f"<p>{CONTROLLER_SENTENCE}</p></main>"),
-        privacy.replace("<main ", '<main title="Kalpesh Patel" '),
-        privacy.replace("90 days", "365 days"),
-        privacy.replace("Memories are stored locally by default.", "Memories are uploaded by default."),
-        privacy.replace("private CloudKit database", "shared CloudKit database", 1),
-        privacy.replace("Zoho Mail", "another provider"),
-        privacy.replace(ZOHO_PRIVACY, "https://www.zoho.com.evil.example/privacy.html"),
-        privacy.replace(APPROVED_PRIVACY_LINK, "mailto:support@madebykal.com?subject=Fondary%20privacy"),
-        privacy.replace(APPROVED_SUPPORT_LINK, APPROVED_SUPPORT_LINK + "&amp;body=private"),
-        privacy.replace("</main>", '<iframe src="https://example.invalid"></iframe></main>'),
-    )
-    for number, mutation in enumerate(privacy_mutations, start=1):
-        if not validate_source(mutation, PAGES[Path("privacy.html")]):
-            print(f"privacy self-test mutation {number} was not rejected", file=sys.stderr)
-            return 1
-    for path, canonical in PAGES.items():
-        if validate_source((ROOT / path).read_text(encoding="utf-8"), canonical):
-            print(f"self-test approved page {path} was rejected", file=sys.stderr)
-            return 1
-    with tempfile.TemporaryDirectory(prefix="fondary-site-validator.") as temporary:
-        root = Path(temporary)
-        future = root / "future" / "nested.html"
-        future.parent.mkdir(parents=True)
-        future.write_text("<p>Future</p>", encoding="utf-8")
-        if repository_html_paths(root) != [Path("future/nested.html")]:
-            print("self-test did not discover a nested future HTML page", file=sys.stderr)
-            return 1
-    print(f"Fondary website self-test passed: {len(mutations) + len(privacy_mutations)} negative fixtures, 2 approved pages, future-page discovery.")
-    return 0
-
-
-def main() -> int:
+def collect_errors() -> list[str]:
     errors: list[str] = []
-    for relative_path in repository_html_paths():
-        if relative_path not in PAGES:
-            errors.append(f"unregistered HTML page {relative_path}")
-    for relative_path, canonical in PAGES.items():
+    for relative_path, route in PAGE_PATHS.items():
         path = ROOT / relative_path
         if not path.is_file():
             errors.append(f"missing {relative_path}")
             continue
-        for error in validate_source(path.read_text(encoding="utf-8"), canonical):
-            errors.append(f"{relative_path}: {error}")
+        source = path.read_text(encoding="utf-8")
+        parser = page_parser(source)
+        rendered = " ".join(parser.rendered_text)
+
+        if not parser.title.strip():
+            errors.append(f"{relative_path}: missing title")
+        if not parser.description.strip():
+            errors.append(f"{relative_path}: missing meta description")
+        if parser.h1_count != 1:
+            errors.append(f"{relative_path}: expected one h1, found {parser.h1_count}")
+        if parser.main_count != 1:
+            errors.append(f"{relative_path}: expected one main, found {parser.main_count}")
+        if not parser.skip_link:
+            errors.append(f"{relative_path}: missing skip link")
+        expected_canonical = f"{CANONICAL_ORIGIN}{route}"
+        if parser.canonical != expected_canonical:
+            errors.append(
+                f"{relative_path}: canonical is {parser.canonical!r}; expected {expected_canonical!r}"
+            )
+        for expected in REQUIRED_PAGE_TEXT[relative_path]:
+            if expected not in rendered:
+                errors.append(f"{relative_path}: missing required product/policy copy {expected!r}")
+        found_mailboxes = {
+            urlsplit(unquote(unescape(value))).path.casefold()
+            for value in parser.attribute_values
+            if unquote(unescape(value)).casefold().startswith("mailto:")
+        }
+        if found_mailboxes != PAGE_MAILBOXES[relative_path]:
+            errors.append(
+                f"{relative_path}: public mailboxes {sorted(found_mailboxes)!r} do not match the approved route set"
+            )
+        errors.extend(
+            f"{relative_path}: {message}"
+            for message in public_policy_errors(
+                source,
+                parser,
+                allow_controller_disclosure=relative_path == Path("privacy.html"),
+            )
+        )
+        errors.extend(f"{relative_path}: {message}" for message in parser.image_errors)
+        for marker in FORBIDDEN_TRACKERS:
+            if marker in source.lower():
+                errors.append(f"{relative_path}: forbidden tracker reference {marker}")
+        for reference in parser.internal_links:
+            if not local_target(reference).exists():
+                errors.append(f"{relative_path}: broken internal reference {reference}")
+
+    registered = set(PAGE_PATHS)
+    for relative_path in repository_html_paths():
+        if relative_path in registered:
+            continue
+        source = (ROOT / relative_path).read_text(encoding="utf-8")
+        parser = page_parser(source)
+        errors.extend(
+            f"{relative_path}: {message}"
+            for message in public_policy_errors(source, parser)
+        )
+        errors.extend(f"{relative_path}: {message}" for message in parser.image_errors)
+        if relative_path == Path("404.html"):
+            if parser.h1_count != 1 or parser.main_count != 1:
+                errors.append("404.html must contain exactly one h1 and one main")
+            for reference in parser.internal_links:
+                if not local_target(reference).exists():
+                    errors.append(f"404.html: broken internal reference {reference}")
+        else:
+            errors.append(f"unregistered HTML page {relative_path}")
+
+    expected_files = (
+        ".nojekyll",
+        "404.html",
+        "AGENTS.md",
+        "CNAME",
+        "README.md",
+        "robots.txt",
+        "sitemap.xml",
+        "styles.css",
+        "assets/fondary-icon.png",
+        "assets/fondary-home.png",
+        "assets/fondary-capture.png",
+        "assets/fondary-search.png",
+        "assets/dm-sans.ttf",
+        "assets/dm-sans-license.txt",
+        "assets/cormorant-garamond.ttf",
+        "assets/cormorant-garamond-license.txt",
+    )
+    for relative_path in expected_files:
+        if not (ROOT / relative_path).is_file():
+            errors.append(f"missing {relative_path}")
+
+    for relative_path, expected_digest in EXPECTED_ASSET_SHA256.items():
+        path = ROOT / relative_path
+        if path.is_file() and sha256(path.read_bytes()).hexdigest() != expected_digest:
+            errors.append(f"{relative_path}: differs from the approved Fondary app asset")
 
     cname = ROOT / "CNAME"
     if not cname.is_file() or cname.read_text(encoding="utf-8").strip() != "getfondary.com":
@@ -339,20 +411,129 @@ def main() -> int:
         ):
             if marker not in agent_text:
                 errors.append(f"AGENTS.md missing governance marker {marker}")
-        for obsolete in (
-            "/Users/hermes/.local/bin/hermes -z",
-            "exclusive operator",
-        ):
-            if obsolete in agent_text:
-                errors.append(f"AGENTS.md contains obsolete governance marker {obsolete}")
 
+    stylesheet = ROOT / "styles.css"
+    if stylesheet.is_file():
+        css = stylesheet.read_text(encoding="utf-8")
+        for marker in (
+            "--teal: #3d7a72",
+            "--teal-dk: #2c5a54",
+            "--linen: #f0ebe1",
+            "--text: #0a1612",
+            "--text-md: #3a4a42",
+            'url("/assets/dm-sans.ttf")',
+            'url("/assets/cormorant-garamond.ttf")',
+            "prefers-reduced-motion",
+        ):
+            if marker not in css:
+                errors.append(f"styles.css missing required brand/accessibility marker {marker}")
+        if "@import" in css or "http://" in css or "https://" in css:
+            errors.append("styles.css must not import external runtime resources")
+        for gradient in ("linear-gradient(", "radial-gradient(", "conic-gradient("):
+            if gradient in css:
+                errors.append("styles.css must not use gradients")
+
+    try:
+        sitemap = ET.parse(ROOT / "sitemap.xml")
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        locations = {element.text for element in sitemap.findall("sm:url/sm:loc", namespace)}
+        expected_locations = {f"{CANONICAL_ORIGIN}{route}" for route in PAGE_PATHS.values()}
+        if locations != expected_locations:
+            errors.append("sitemap routes do not exactly match the public page set")
+    except (ET.ParseError, OSError) as error:
+        errors.append(f"invalid sitemap: {error}")
+
+    return errors
+
+
+def run_self_test() -> int:
+    rejected = (
+        ("<p>Ashraya&#32;Studio</p>", "forbidden public identity marker"),
+        ('<a href="mailto:help@example.com?subject=Fondary%20support">Support</a>', "email outside approved exact mailbox"),
+        (f"<p>{LEGAL_OPERATOR_NAME}</p>", "forbidden public identity marker"),
+        ("<p>&copy; 2026</p>", "forbidden public identity marker"),
+        ("<form></form>", "forms are not permitted"),
+        ("<script></script>", "JavaScript is not permitted"),
+        ('<img src="https://example.invalid/pixel.png" alt="">', "external runtime dependency"),
+        ('<iframe src="/remote"></iframe>', "embedded content is not permitted"),
+        ('<a href="https://example.invalid/">External</a>', "unapproved external link"),
+        ('<main onload="alert(1)"></main>', "unsafe attributes"),
+    )
+    for source, expected in rejected:
+        parser = page_parser(source)
+        if not any(expected in error for error in public_policy_errors(source, parser)):
+            print(f"self-test did not reject {expected}", file=sys.stderr)
+            return 1
+
+    for address in (
+        "other@gmail.com",
+        "support+fondary@madebykal.com",
+        "hello@madebykal.com",
+        "support@madebykal.com.evil.example",
+        "support@mail.madebykal.com",
+    ):
+        source = f'<a href="mailto:{address}?subject=Fondary%20support">Contact</a>'
+        if not public_policy_errors(source, page_parser(source)):
+            print("self-test accepted an unapproved mailbox", file=sys.stderr)
+            return 1
+
+    for suffix in (
+        "&amp;cc=other%40gmail.com",
+        "&amp;bcc=other%40gmail.com",
+        "&amp;subject=duplicate",
+        "%0D%0ABcc%3Aother%40gmail.com",
+    ):
+        source = f'<a href="mailto:{SUPPORT_EMAIL}?subject=Fondary%20support{suffix}">Contact</a>'
+        if not public_policy_errors(source, page_parser(source)):
+            print("self-test accepted an unsafe mail header", file=sys.stderr)
+            return 1
+
+    approved_mail = f'<a href="mailto:{SUPPORT_EMAIL}?subject=Fondary%20support">{SUPPORT_EMAIL}</a>'
+    if public_policy_errors(approved_mail, page_parser(approved_mail)):
+        print("self-test rejected the approved support mail link", file=sys.stderr)
+        return 1
+
+    approved_privacy = f"<p>{CONTROLLER_DISCLOSURE}</p>"
+    if public_policy_errors(
+        approved_privacy,
+        page_parser(approved_privacy),
+        allow_controller_disclosure=True,
+    ):
+        print("self-test rejected the exact privacy controller disclosure", file=sys.stderr)
+        return 1
+
+    for source in (
+        f"<p>{CONTROLLER_DISCLOSURE}</p><p>{CONTROLLER_DISCLOSURE}</p>",
+        f"<p>{LEGAL_OPERATOR_NAME} is the data controller.</p>",
+    ):
+        errors = public_policy_errors(
+            source,
+            page_parser(source),
+            allow_controller_disclosure=True,
+        )
+        if not any("exactly one approved controller disclosure" in error for error in errors):
+            print("self-test accepted non-standard privacy controller copy", file=sys.stderr)
+            return 1
+
+    current_errors = collect_errors()
+    if current_errors:
+        print("self-test could not validate the approved current site:", file=sys.stderr)
+        for error in current_errors:
+            print(f"- {error}", file=sys.stderr)
+        return 1
+
+    print("Fondary website validator self-test passed.")
+    return 0
+
+
+def main() -> int:
+    errors = collect_errors()
     if errors:
         print("Fondary website validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
-
-    print("Fondary website validation passed.")
+    print("Fondary website structural, identity, privacy, and asset validation passed.")
     return 0
 
 
